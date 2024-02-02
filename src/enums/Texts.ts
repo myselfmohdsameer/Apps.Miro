@@ -1,7 +1,10 @@
 export enum Texts {
-    Help = `Miro App provides you the following slash commands, /miro-app:
-    1) *help:* shows this list.
-    2) *auth:* starts the process to authorize your Miro Account.`,
+    Help = `Miro App provides you the following slash commands, \`/miro-app\`:
+    1) **help:** shows this list.
+    2) **auth:** starts the process to authorize your Miro Account.
+    3) **get:** for retreiving your boards from Miro.
+    4) **create:** for creating a board on Miro.
+    5) **manage:** for managing your board notifications subscriptions.`,
     Auth = 'auth',
     QuickReminder = 'Quick reminder: Let your workspace users know about the Miro App,\
     so everyone will be able to manage their boards as well.\n',
@@ -14,8 +17,15 @@ export enum Texts {
     getSpecificBoardFailure = '❗️ Unable to retrieve board! \n Error ',
     createBoardSuccess = '✅️ Board created successfully! \n You may access it at ',
     createBoardFailure ='❗️ Unable to create board! \n Error ',
+    updateBoardFailure ='❗️ Unable to update board! \n Error ',
+    createSubscriptionSuccess = '✅️ Subscription created successfully!',
+    createSubscriptionFailure ='❗️ Unable to create subscription! \n Error ',
     deleteBoardSuccess = '✅️ Board deleted successfully!',
     deleteBoardFailure ='❗️ Unable to delete board! \n Error ',
+    deleteSubscriptionSuccess = '✅️ Subscription deleted successfully!',
+    deleteSubscriptionFailure ='❗️ Unable to delete subscription! \n Error ',
     addBoardMembersSuccess = '✅️ Board members invited successfully!',
     addBoardMembersFailure ='❗️ Unable to invite board members! \n Error ',
+    embedBoardSuccess = '✅️ Board embedded to current room successfully!',
+    removeEmbeddedBoardSuccess ='✅️ Board removed from current room.',
 }

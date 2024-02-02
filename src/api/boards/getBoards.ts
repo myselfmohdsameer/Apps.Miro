@@ -1,8 +1,5 @@
-import { IHttp, IModify, IPersistence, IRead } from '@rocket.chat/apps-engine/definition/accessors';
 import { HttpStatusCode } from '@rocket.chat/apps-engine/definition/accessors';
-import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
-import { ButtonStyle, UIKitViewSubmitInteractionContext } from '@rocket.chat/apps-engine/definition/uikit';
-import { IUIKitViewSubmitIncomingInteraction } from '@rocket.chat/apps-engine/definition/uikit/UIKitIncomingInteractionTypes';
+import { ButtonStyle } from '@rocket.chat/apps-engine/definition/uikit';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { Block } from '@rocket.chat/ui-kit';
 import { MiscEnum } from '../../enums/Misc';
@@ -11,12 +8,11 @@ import { Texts } from '../../enums/Texts';
 import { getActionsBlock, getButton, getContextBlock, getSectionBlock } from '../../helpers/blockBuilder';
 import { ISubmitGenericAPIFunctionParams } from '../../interfaces/external';
 import { getBoardsUrl } from '../../lib/const';
-import { getAccessTokenForUser } from '../../storage/users';
 
-export async function getBoards({ context, data, room, read, persistence, modify, http }: ISubmitGenericAPIFunctionParams) {
+export async function getBoards({ app, context, data, room, read, persistence, modify, http }: ISubmitGenericAPIFunctionParams) {
   const state = data.view.state;
   const user: IUser = context.getInteractionData().user;
-  const token = await getAccessTokenForUser(read, user);
+  const token = await app.getOauth2ClientInstance().getAccessTokenForUser(user);
   const team_id = state?.[ModalsEnum.TEAM_ID_BLOCK]?.[ModalsEnum.TEAM_ID_INPUT];
   const project_id = state?.[ModalsEnum.PROJECT_ID_BLOCK]?.[ModalsEnum.PROJECT_ID_INPUT];
   const owner_id = state?.[ModalsEnum.OWNER_ID_BLOCK]?.[ModalsEnum.OWNER_ID_INPUT];
@@ -37,8 +33,9 @@ export async function getBoards({ context, data, room, read, persistence, modify
       const shareBoardButton = await getButton(MiscEnum.SHARE_BOARD_BUTTON, MiscEnum.BOARD_ACTIONS_BLOCK, MiscEnum.SHARE_BOARD_ACTION_ID, `${board.id}`, ButtonStyle.PRIMARY);
       const editBoardButton = await getButton(MiscEnum.EDIT_BOARD_BUTTON, MiscEnum.BOARD_ACTIONS_BLOCK, MiscEnum.EDIT_BOARD_ACTION_ID, `${board.id}`);
       const deleteBoardButton = await getButton(MiscEnum.DELETE_BOARD_BUTTON, MiscEnum.BOARD_ACTIONS_BLOCK, MiscEnum.DELETE_BOARD_ACTION_ID, `${board.id}`, ButtonStyle.DANGER);
-      const subscribeboardButton = await getButton(MiscEnum.SUBSCRIBE_BOARD_BUTTON, MiscEnum.BOARD_ACTIONS_BLOCK, MiscEnum.SUBSCRIBE_BOARD_ACTION_ID, `${board.name},${board.id}`, ButtonStyle.PRIMARY);
-      const boardActionBlock = await getActionsBlock(MiscEnum.BOARD_ACTIONS_BLOCK, [viewBoardButton, shareBoardButton, editBoardButton, deleteBoardButton, subscribeboardButton]);
+      const subscribeBoardButton = await getButton(MiscEnum.SUBSCRIBE_BOARD_BUTTON, MiscEnum.BOARD_ACTIONS_BLOCK, MiscEnum.SUBSCRIBE_BOARD_ACTION_ID, `${board.id}|${board.name}`, ButtonStyle.PRIMARY);
+      const embedBoardButton = await getButton(MiscEnum.EMBED_BOARD_BUTTON, MiscEnum.BOARD_ACTIONS_BLOCK, MiscEnum.EMBED_BOARD_ACTION_ID,`${board.id}|${board.name}|${board.viewLink}`, ButtonStyle.PRIMARY);
+      const boardActionBlock = await getActionsBlock(MiscEnum.BOARD_ACTIONS_BLOCK, [viewBoardButton, shareBoardButton, editBoardButton, deleteBoardButton, subscribeBoardButton, embedBoardButton]);
       block.push(boardActionBlock);
       builder.setBlocks(block);
     }
